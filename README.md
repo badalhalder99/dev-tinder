@@ -7,7 +7,7 @@ A simple Express.js application for backend API development.
 1. Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/badalhalder99/dev-tinder.git
 cd dev-tinder
 ```
 
