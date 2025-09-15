@@ -1,0 +1,25 @@
+{
+  "name": "dev-tinder",
+  "version": "1.0.0",
+  "description": "A simple Express.js application",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "keywords": [
+    "express",
+    "node",
+    "api",
+    "backend"
+  ],
+  "author": "Badol Halder",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0"
+  }
+}
