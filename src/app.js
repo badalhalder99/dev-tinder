@@ -1,13 +1,13 @@
 const express = require("express")
 require("dotenv").config();
-const { adminAuth } = require("./middleware/adminAuth")
+const { adminAuth, userAuth } = require("./middleware/auth")
 
 const app = express()
 const PORT = process.env.PORT || 3000
 
 app.use("/admin", adminAuth)
 
-app.get("/user", (req, res) => {
+app.get("/user", userAuth, (req, res) => {
   res.send("user data get successfully")
 })
 
