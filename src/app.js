@@ -1,42 +1,16 @@
 const express = require("express")
-require("dotenv").config();
-const { adminAuth, userAuth } = require("./middleware/auth")
+require("dotenv").config()
+const { connectDB } = require("./config/database")
 
 const app = express()
 const PORT = process.env.PORT || 3000
 
-app.use("/admin", adminAuth)
-
-app.get("/user", userAuth, (req, res) => {
-  res.send("user data get successfully")
+connectDB().then(() => {
+   console.log("Database connected successfully!")
+   app.listen(PORT, () => {
+      console.log(`Server is successfully running on ${PORT}`)
+   })
+}).catch(err => {
+   console.error("Database can not be connected!")
 })
 
-app.get("/admin/getAllData", (req, res) => {
-  res.send("All data get successfully!")
-})
-
-app.get("/admin/deleteUser", (req, res) => {
-  res.send("admin Data deleted successfully!")
-})
-
-// app.get("/admin/getAllData", (req, res) => {
-//   const token = "xyz";
-//   const isAdminAuthorized = token === "xyz";
-//   if (isAdminAuthorized) {
-//     res.send("All Data Sent");
-//   } else {
-//     res.status(401).send("Unauthorized request");
-//   }
-// });
-
-app.use("/", (err,req, res, next) => {
-  if (err) {
-    res.status(500).send("Something went wrong")
-  }
-})
-
-app.listen(PORT, () => {
-  console.log(`Server is successfully running on ${PORT}`)
-})
-
-//end of the file.Do next..
