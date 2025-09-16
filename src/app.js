@@ -29,6 +29,11 @@ app.get("/admin/deleteUser", (req, res) => {
 //   }
 // });
 
+app.use("/", (err,req, res, next) => {
+  if (err) {
+    res.status(500).send("Something went wrong")
+  }
+})
 
 app.listen(PORT, () => {
   console.log(`Server is successfully running on ${PORT}`)
