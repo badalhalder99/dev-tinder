@@ -1,29 +1,33 @@
 const express = require("express")
 require("dotenv").config();
+const { adminAuth } = require("./middleware/adminAuth")
 
 const app = express()
 const PORT = process.env.PORT || 3000
 
+app.use("/admin", adminAuth)
+
 app.get("/user", (req, res) => {
-  res.send({firstname: "Badal", lastname: "Halder"})
+  res.send("user data get successfully")
 })
 
-app.post("/user", (req, res) => {
-  res.send("Data save successfully to the database!")
+app.get("/admin/getAllData", (req, res) => {
+  res.send("All data get successfully!")
 })
 
-app.put("/user", (req, res) => {
-  res.send("Data edited successfully!")
+app.get("/admin/deleteUser", (req, res) => {
+  res.send("admin Data deleted successfully!")
 })
 
-app.delete("/user", (req, res) => {
-  res.send("Data deleted successfully!")
-})
-
-// this will match all the HTTP method API calls to /test
-app.use("/test", (req, res) => {
-  res.send("Hello from the server!")
-})
+// app.get("/admin/getAllData", (req, res) => {
+//   const token = "xyz";
+//   const isAdminAuthorized = token === "xyz";
+//   if (isAdminAuthorized) {
+//     res.send("All Data Sent");
+//   } else {
+//     res.status(401).send("Unauthorized request");
+//   }
+// });
 
 
 app.listen(PORT, () => {
