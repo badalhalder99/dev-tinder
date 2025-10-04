@@ -23,12 +23,26 @@ app.post("/signup", async (req, res) => {
 })
 
 //Update profile API/ Update the data to the database:
-app.put("/user", async (req, res) => {
+app.put("/user/:id", async (req, res) => {
 
-   const userId = req.body._id
+   const userId = req.params.id
    const updateUserData = req.body
 
+   console.log(req.params)
+
    try {
+      const allowedUpdate = ["_id", "photoUrl", "about", "gender", "age", "skills"]
+
+      const isUpdateAllowed = Object.keys(updateUserData).every(k => allowedUpdate.includes(k))
+
+      if (!isUpdateAllowed) {
+         res.status(400).send("Update not allowed!")
+      }
+
+      if (updateUserData?.skills.length > 5) {
+         throw new Error("Skills cannot be more than 5")
+      }
+
       await User.findByIdAndUpdate({_id: userId}, updateUserData)
       // await User.findByIdAndUpdate(userId, updateUserData)
       res.send("User updated successfully!")

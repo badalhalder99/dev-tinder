@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const { Schema } = mongoose;
+const validator = require('validator');
 
 const userSchema = new Schema({
    firstName: {
@@ -13,10 +14,21 @@ const userSchema = new Schema({
       type: String,
       required: true,
       lowercase: true,
-      trim: true
+      trim: true,
+      validate (value) {
+         if (!validator.isEmail(value)) {
+            throw new Error("Email is not valid!")
+         }
+      }
    },
    password: {
-      type: String
+      type: String,
+      required: true,
+      validate (value) {
+         if (!validator.isStrongPassword(value)) {
+            throw new Error("Password is not valid!")
+         }
+      }
    },
    age: {
       type: Number,
@@ -31,7 +43,13 @@ const userSchema = new Schema({
       }
    },
    photoUrl: {
-      type: String
+      type: String,
+      default: 'https://cdn-icons-png.flaticon.com/512/219/219983.png',
+      validate (value) {
+         if (!validator.isURL(value)) {
+            throw new Error("PhotoURL is not valid!")
+         }
+      }
    },
    about: {
       type: String,
