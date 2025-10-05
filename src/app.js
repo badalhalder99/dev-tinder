@@ -61,6 +61,7 @@ app.post("/login", async (req, res) => {
 
       // Check if user already exists
       const existingUser = await User.findOne({ emailId: emailId.toLowerCase() });
+      
       if (!existingUser) {
          return res.status(404).send("User not found!");
       }
@@ -68,11 +69,7 @@ app.post("/login", async (req, res) => {
       const isPasswordValid = await bcrypt.compare(password, existingUser.password)
 
       if (isPasswordValid) {
-         //Create a JWT Token:
-         const token = await jwt.sign({ _id: existingUser._id }, "DEV@Tinder$123", { expiresIn: '7d' })
-
-         console.log(token)
-         //Add the token to the cookie and send the response back to the user
+         const token = await existingUser.getJWT()
          res.cookie("token", token)
          res.send("User logged in successfully!")
       } else {
