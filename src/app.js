@@ -89,81 +89,20 @@ app.get("/profile", userAuth, async (req, res) => {
    try {
 
       const user = req.user
-      
+
       res.send(user)
    } catch (err) {
       res.status(500).send(`Error saving the user: ${err.message}`);
    }
 })
 
-//Update profile API/ Update the data to the database:
-app.put("/user/:id", async (req, res) => {
-
-   const userId = req.params.id
-   const updateUserData = req.body
-
-   console.log(req.params)
-
+//sendConnectionRequest API:
+app.post("/sendConnectionRequest", userAuth, async (req, res) => {
    try {
-      const allowedUpdate = ["_id", "photoUrl", "about", "gender", "age", "skills"]
 
-      const isUpdateAllowed = Object.keys(updateUserData).every(k => allowedUpdate.includes(k))
-
-      if (!isUpdateAllowed) {
-         res.status(400).send("Update not allowed!")
-      }
-
-      if (updateUserData?.skills.length > 5) {
-         throw new Error("Skills cannot be more than 5")
-      }
-
-      await User.findByIdAndUpdate({_id: userId}, updateUserData)
-      // await User.findByIdAndUpdate(userId, updateUserData)
-      res.send("User updated successfully!")
+      res.send("Sent Connection Request successfully!")
    } catch (err) {
-      res.status(400).send(`Error updated the user ${err.message}`)
-   }
-})
-
-//Get user by email:
-app.get("/user", async (req, res) => {
-   const userEmail = req.body.emailId
-
-   try {
-      const user = await User.find({ emailId: userEmail })
-      if (user.length === 0) {
-         res.status(404).send("User not Found");
-      } else {
-         res.send(user)
-      }
-
-   } catch (err) {
-      res.status(400).send("Something went wrong!")
-   }
-})
-
-//Feed API - Get /feed - get all the users from the database:
-app.get("/feed", async (req, res) => {
-
-   try {
-      const users = await User.find({})
-      if (users.length === 0) return res.status(404).send("User not Found");
-      res.send(users)
-   } catch (err) {
-      res.status(400).send("Something went wrong!")
-   }
-})
-
-//Delete API:
-app.delete("/user", async (req, res) => {
-   const userId = req.body._id
-
-   try {
-      await User.findByIdAndDelete({_id: userId})
-      // const users = await User.findByIdAndDelete(userId)
-      res.send("Users Deleted successfully!")
-   } catch (err) {
-      res.status(400).send("Something went wrong!")
+      res.status(500).send(`Error saving the user: ${err.message}`);
    }
 })
 
