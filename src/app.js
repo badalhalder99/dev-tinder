@@ -69,7 +69,7 @@ app.post("/login", async (req, res) => {
 
       if (isPasswordValid) {
          //Create a JWT Token:
-         const token = await jwt.sign({ _id: existingUser._id }, "DEV@Tinder$123")
+         const token = await jwt.sign({ _id: existingUser._id }, "DEV@Tinder$123", { expiresIn: '1h' })
 
          console.log(token)
          //Add the token to the cookie and send the response back to the user
@@ -99,8 +99,8 @@ app.get("/profile", userAuth, async (req, res) => {
 //sendConnectionRequest API:
 app.post("/sendConnectionRequest", userAuth, async (req, res) => {
    try {
-
-      res.send("Sent Connection Request successfully!")
+      const user = req.user
+      res.send(user.firstName + " Sent Connection Request successfully!")
    } catch (err) {
       res.status(500).send(`Error saving the user: ${err.message}`);
    }
