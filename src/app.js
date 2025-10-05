@@ -6,6 +6,7 @@ const { User } = require("./models/user")
 const bcrypt = require('bcrypt')
 const cookieParser = require('cookie-parser')
 const jwt = require('jsonwebtoken')
+const { userAuth } = require('./middleware/auth')
 const app = express()
 const PORT = process.env.PORT || 3000
 
@@ -84,28 +85,11 @@ app.post("/login", async (req, res) => {
 })
 
 //Profile API:
-app.get("/profile", async (req, res) => {
+app.get("/profile", userAuth, async (req, res) => {
    try {
-      const cookies = req.cookies
-      const { token } = cookies
 
-      if (!token) {
-         throw new Error("Invalid tokens!")
-      }
-
-      //validate my token:
-      const decodedMessage = await jwt.verify(token, "DEV@Tinder$123")
+      const user = req.user
       
-      const { _id } = decodedMessage
-      console.log(`Loged in user id is: ${_id}`)
-
-      console.log(decodedMessage)
-
-      const user = await User.findById(_id)
-      if (!user) {
-         throw new Error("User not found!")
-      }
-
       res.send(user)
    } catch (err) {
       res.status(500).send(`Error saving the user: ${err.message}`);
