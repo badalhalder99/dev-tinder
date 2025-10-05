@@ -61,7 +61,7 @@ app.post("/login", async (req, res) => {
 
       // Check if user already exists
       const existingUser = await User.findOne({ emailId: emailId.toLowerCase() });
-      
+
       if (!existingUser) {
          return res.status(404).send("User not found!");
       }
@@ -87,6 +87,17 @@ app.get("/profile", userAuth, async (req, res) => {
 
       const user = req.user
 
+      res.send(user)
+   } catch (err) {
+      res.status(500).send(`Error saving the user: ${err.message}`);
+   }
+})
+
+//get all user API:
+app.get("/feed", async (req, res) => {
+   try {
+
+      const user = await User.find({})
       res.send(user)
    } catch (err) {
       res.status(500).send(`Error saving the user: ${err.message}`);
