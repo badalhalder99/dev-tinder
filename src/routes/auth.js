@@ -73,7 +73,7 @@ authRouter.post("/login", async (req, res) => {
    }
 })
 
-//Login API - Login new users:
+//Logout API - Logout users:
 authRouter.post("/logout", async (req, res) => {
    res.cookie("token", null, {
       expires: new Date(Date.now())
