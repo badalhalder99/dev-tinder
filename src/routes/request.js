@@ -71,4 +71,48 @@ requestRouter.post("/request/send/:status/:toUserId", userAuth, async (req, res)
    }
 })
 
+// request review API:
+requestRouter.post("/request/review/:status/:requestId", userAuth, async (req, res) => {
+   try {
+      const loggedInUser = req.user;
+      const { status, requestId } = req.params;
+
+      const allowedStatus = ["accepted", "rejected"];
+      if (!allowedStatus.includes(status)) {
+         return res.status(400).json({
+            message: `Invalid status type ${status}`
+         });
+      }
+
+      const connectionRequest = await ConnectionRequestModel.findOne({
+         _id: requestId,
+         toUserId: loggedInUser._id,
+         status: "interested",
+      });
+
+      if (!connectionRequest) {
+         return res.status(404).json({
+            message: `Connection Request Not Found!`
+         });
+      }
+
+      // Update status
+      connectionRequest.status = status;
+      const data = await connectionRequest.save();
+
+      // Fetch both users for message clarity
+      const fromUser = await User.findById(connectionRequest.fromUserId);
+      const toUser = await User.findById(connectionRequest.toUserId);
+
+      res.json({
+         message: `${toUser.firstName} ${toUser.lastName} has ${status} ${fromUser.firstName} ${fromUser.lastName}`,
+         data
+      });
+
+   } catch (err) {
+      res.status(500).send(`Error: ${err.message}`);
+   }
+});
+
+
 module.exports = requestRouter;

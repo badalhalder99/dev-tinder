@@ -7,7 +7,8 @@ const jwt = require('jsonwebtoken')
 const userSchema = new Schema({
    firstName: {
       type: String,
-      required: true
+      required: true,
+      index: true
    },
    lastName: {
       type: String
@@ -69,6 +70,7 @@ const userSchema = new Schema({
    }
 }, { timestamps: true })
 
+userSchema.index({ firstName: 1 })
 
 userSchema.methods.getJWT = async function () {
    const existingUser = this
